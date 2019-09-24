@@ -1,0 +1,13 @@
+/* Style the point section */
+/* Style the gem section */
+/* Set the background image */
+/* Style the high score section */
+/*  */
+
+#container {
+    float: left;
+}
+
+.gems {
+    float: left;
+}

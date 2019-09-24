@@ -1,0 +1,93 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="asset/css/style.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- <script type="text/javascript" src = "unit-4-game/asset/javascript/gem.js"></script> -->
+
+    <title> Gems </title>
+
+</head>
+
+<body>
+    <div id = "fill-space"> Gem Space </div>
+
+    <div id = "container">
+            <div id = "gemSet"> 
+                <div id="gem0" class="gems" value=1>  </div>
+                <div id="gem1" class="gems" value=2>  </div>
+                <!-- <div id="3" class="gems" value = 3>  </div>
+                <div id="4" class="gems" value = 4>  </div> -->
+            </div>
+        
+            <div id = "stats">
+               <div id = "wins"> WINS : 0</div>
+                <div id = "loss"> LOSSES : 0 </div>
+                <div id = "points"> Points : 0 </div>
+                <div id = "target_points"> Target points : </div>
+            </div>
+    </div>
+    <script>
+
+        $(document).ready(function() {
+            var wins = 0;
+            var losses = 0;
+            var playAgain = false;
+            var targetValue = 0;
+            var myPoints = 0;
+            var arrayRandom = [];
+            var gems = ["red","blue"];
+            var imgGems = ["https://miro.medium.com/max/959/1*Qc0XxYm-qAZL-7tjjlNfrg.png", "https://classroomclipart.com/images/gallery/Clipart/Gems_and_Minerals/aquamarine-gems-and-minerals-clipart.jpg"];
+            
+            function numberRandom(){
+                return Math.floor(Math.random()*12 + 1);
+            }
+
+            for(var i = 0; i < gems.length;i++){            
+                var s = "gem" + i;
+                console.log(s);
+
+                var crystal = $("<img>");
+
+                crystal.attr({
+                "class": 'crystalStyle',
+                "numberRandom": numberRandom(),
+                "src": imgGems[i],
+                "width": 150,
+                "height" : 150
+                });
+
+                $("div#" + s).append(crystal);
+            }
+
+            function work(){
+                var value = $(this).children('img').attr("numberRandom");
+                myPoints = myPoints + parseInt(value);
+                $("#points").text("Points : " + myPoints);
+                console.log(myPoints);
+
+                if(targetValue == myPoints){
+                    alert("You Win !");
+                    
+                } else if( myPoints > targetValue){
+                    alert("You Lose !");
+                }
+
+            }
+
+            function generateTargetValue(){
+                targetValue = Math.floor(Math.random()*101 + 19);
+                $("#target_points").text("Target Points : " + targetValue);
+            }
+
+            $("div#gem0").on("click", work);
+            $("div#gem1").on("click", work);
+
+            generateTargetValue();
+
+        });
+
+    </script>
+</body>
+</html>
