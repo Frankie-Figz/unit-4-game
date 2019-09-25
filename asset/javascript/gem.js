@@ -1,175 +1,107 @@
-// Define an OBJECT and a SETTER function  
-​// Create a Gem object constructor ES5 style
-
-function newGem(color, value) {
-    this.color = color;
-    this.value = value;
-​
-    this.setValue = function(val) {
-        this.value = val;
-    }
-}
-​
-// Create a Function Expression
-var anotherGem = function(color, value) {
-    this.color = color;
-    this.value = value;
-​
-    this.setValue = function(val) {
-        this.value = val;
-        return console.log(`value is now ${this.value}`);
-    }
-}
-​
-function createGemValue() {
-    // returns a random number between 1 and 10
-    return Math.floor((Math.random() * 12));
-}
-
-function createRandomValue(){
-    var randomPart = Math.floor(Math.random() * 101 + 1);
-    var numberToGuess = randomPart + 19;
-    return numberToGuess;
-}
-​
-// *** TESTING *** //
-let purple = new newGem('purple', createGemValue());
-let green = new newGem('green', createGemValue());
-let blue = new newGem('blue', createGemValue());
-let red = new newGem('red',createGemValue());
+var wins = 0;
+var losses = 0;
+var playAgain = "";
+var gemValues = [];
 
 
-// <script>    
-//     // Area to be used for displaying statistics about the game
-//     var winsArea = document.getElementById("wins");
-//     var lossesArea = document.getElementById("losses");
+function play(){    
+    var targetValue = 0;
+    var myPoints = 0;
 
-//     var playAgain = false;
-//     var play = false;
+    var gems = ["red","blue","yellow","purple"];
 
-//     var points = 0;
-//     var guessesRemaining = 5;
-
-//     var loss = 0;
-//     var wins = 0;
+    var imgGems = ["https://miro.medium.com/max/959/1*Qc0XxYm-qAZL-7tjjlNfrg.png", 
+    "https://classroomclipart.com/images/gallery/Clipart/Gems_and_Minerals/aquamarine-gems-and-minerals-clipart.jpg",
+    "https://3.imimg.com/data3/LP/JI/MY-998788/topaz-250x250.jpg",
+    "https://images.jtv.com/media/jtv-site/gemopedia/amethyst/amethyst-hero.jpg"];
     
-//     // Area to be used for displaying statistics about the game
-//     var winsArea = document.getElementById("wins");
-//     var lossesArea = document.getElementById("losses");
-//     var guessesRemainingArea = document.getElementById("guessesRemaining");
-//     var lettersGuessedArea = document.getElementById("lettersGuessed");
+    function numberRandom(){
+        return Math.floor(Math.random()*12 + 1);
+    }
 
-//     function generateNumber() {
-//         var wordTemp = wordDictionary[Math.floor(Math.random() * wordDictionary.length)];
-//         return wordTemp;
-//     }
+    function generateTargetValue(){
+        targetValue = Math.floor(Math.random()*101 + 19);
+        $("#target_points").text("Target Points : " + targetValue);
+    }
 
-//     function playGame(){
-//         // Method to draw new blanks corresponding to the randomly selected word.
-//         // In this method we are also randomly selecting the word
-//         lightUpBlank();
+    function setScore(){
+        myPoints = 0;
 
-//         // Draws the text on screen corresponding to the stats of the game.
-//         // Also resets the guesses to 5 and points to 0
-//         // Redraws the letters guessed to none
-//         initializeText();
+        $("#wins").text("WINS : " + wins);
+        $("#loss").text("LOSS : " + losses);
+        $("#points").text("Points : " + myPoints);
+        
+    }
 
-//      document.onkeyup = function(event) {
-//             // Retrieves the previous key the user has typed
-//             var userInput = event.key.toLowerCase();
-//             // Checks if the key is valid
-//             if(isValidInput(userInput)){
-//                 //Checks if the user key is in the word
-//                 checkLetterInWord(userInput);
-//             } else {
-//                 // If not a valid input scream at the user
-//                 alert("This is not a valid input : " + userInput);
-//             }
+    clearDrawSpace();
+    
+    $("div#gem0").on("click", updatePlayerPoints);
+    $("div#gem1").on("click", updatePlayerPoints);
+    $("div#gem2").on("click", updatePlayerPoints);
+    $("div#gem3").on("click", updatePlayerPoints);
 
-//             if(points == word.length){
-//                 var playAgain = confirm("You Win ! Do you want to play again ?");
-//                 wins++;
-//             } else if (guessesRemaining <= 0) {
-//                 var playAgain = confirm("You Loss ! Do you want to play again ?");
-//                 loss++;
-//             }
+    function drawGems(){
+        for(var i = 0; i < gems.length;i++){            
+            var s = "gem" + i;
+    
+            var crystal = $("<img>");
+    
+            crystal.attr({
+            "class": 'crystalStyle',
+            "numberRandom": numberRandom(),
+            "src": imgGems[i],
+            "width": 150,
+            "height" : 150
+            });
+    
+            $("div#" + s).append(crystal);
+            gemValues.push(numberRandom());
+            console.log(gemValues.toString());
+        }
+    }
 
-//              // The playAgain method call's itself if the user wants to play again
-//             if(playAgain == true){
-//                 playGame();
-//             }
-//         }
+    function clearDrawSpace(){
+        /* Resets the array where the random vlaues are stored*/
+        gemValues = [];
 
-//     }
+        $("#gem0").empty();
+        $("#gem1").empty();
+        $("#gem2").empty();
+        $("#gem3").empty();
+        
+        $("#wins").empty();
+        $("#loss").empty();
+        $("#points").empty();
+        $("#target_points").empty();
+        
+        generateTargetValue();
+        setScore();
+        drawGems();
+    }
 
-//     function initializeText(){
-//         var guessesRemainingDisplay = document.getElementById("guessesRemaining");
-//         guessesRemainingDisplay.textContent = "GUESSES REMAINING : 5";
-//         guessesRemaining = 5;
+    function updatePlayerPoints(){
+        // var value = $(this).children('img').attr("numberRandom");
+        // + parseInt(value);
 
-//         var lettersGuessedDisplay = document.getElementById("lettersGuessed");
-//         lettersGuessedDisplay.textContent = "LETTERS GUESSED : ";
-//         previousWords = [];
+        var index = $(this).attr("value");
 
-//         var winsDisplay = document.getElementById("wins");
-//         winsDisplay.textContent = "WINS : " + wins;
+        myPoints = myPoints + gemValues[parseInt(index)];
+        $("#points").text("Points : " + myPoints);
+        console.log(index);
 
-//         var lossDisplay = document.getElementById("loss");
-//         lossDisplay.textContent = "LOSS : " + loss;
-
-//         points = 0;
-//         previousGuesses = [];
-
-//     }
-
-//     function initializeGems(){
-
-//     }
-
-//     function checkLetterInWord(s) {
-//         // add letter to the array of guesses if it is not already there
-//         if(!previousGuesses.includes(s)){
-//             previousGuesses.push(s);
-//             lettersGuessedArea.textContent = previousGuesses.toString();
-
-//             for(var i = 0; i < word.length; i++){
-//             if(s == word[i]){
-//             // Display blank i with the current letter s
-//                 var text = document.getElementById("B" + i);
-//                 text.textContent = s;
-
-//             // Update hasHit boolean
-//                 hasHit = true;
-//                 points++;                
-//                 }
-//             }
-
-//             if(!hasHit){
-//                 guessesRemaining--;
-//                 var guessesRemainingDisplay = document.getElementById("guessesRemaining")
-//                 guessesRemainingDisplay.textContent = "GUESSES REMAINING : " + guessesRemaining;
-//             }
-
-//             //Reset has hit to false
-//             hasHit = false;
-//             console.log(points);
+        if(targetValue == myPoints){
+            var playAgain = confirm("You Win ! Do you want to play again ?");
+            wins++;
+            if(playAgain == true){
+                clearDrawSpace();
+            }
             
-//         // Add key guess to the string
-//         lettersGuessed.textContent = "LETTERS GUESSED : " + previousGuesses.toString();
-//         } else{
-//             alert("This letter has already been used : " + s);
-//         }
-//     }
-
-//     function isValidInput(s){
-//         return alphabet.includes(s);
-//     }
-    
-//     var play = confirm("Do you want to play a game ?");
-//     console.log(play);
-    
-//     if(play == true){
-//         playGame();
-//     }
-
-// </script>
+        } else if( myPoints > targetValue){
+            var playAgain = confirm("You Lose ! Do you want to play again ?");
+            losses++;
+            if(playAgain == true){
+                clearDrawSpace();    
+            }                
+        }
+    }
+}
